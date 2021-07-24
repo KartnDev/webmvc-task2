@@ -1,1 +1,1 @@
-INSERT INTO products(name, price) VALUES ('burger', 150);
+INSERT INTO users(id, userName, password) VALUES ('dfasd2qdwqd', 'admin', 'admin');
