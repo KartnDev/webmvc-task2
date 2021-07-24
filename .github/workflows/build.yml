@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GHCR_REGISTRY: ghcr.io
-      IMAGE: coursar/webmvc
+      IMAGE: KartonDCP/webmvc-task2
 
     steps:
       - uses: actions/checkout@v2
