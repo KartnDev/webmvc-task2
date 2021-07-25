@@ -20,22 +20,22 @@ public class OrderController {
     private final OrderControllerManager orderControllerManager;
 
     @PostMapping("register.do")
-    public OrderRegisterResponse registerDo(@RequestBody OrderRegisterRequest orderRequest){
+    public OrderRegisterResponse registerDo(OrderRegisterRequest orderRequest){
         return orderControllerManager.registerDo(orderRequest);
     }
 
     @PostMapping("deposit.do")
-    public DepositResponse depositDo(@RequestBody DepositRequest depositRequest){
+    public DepositResponse depositDo(DepositRequest depositRequest){
         return orderControllerManager.depositDo(depositRequest);
     }
 
     @PostMapping("getOrderStatus.do")
-    public GetOrderStatusResponse getOrderStatusDo(@RequestBody GetOrderStatusRequest getOrderStatusRequest){
+    public GetOrderStatusResponse getOrderStatusDo(GetOrderStatusRequest getOrderStatusRequest){
         return orderControllerManager.getOrderStatusDo(getOrderStatusRequest);
     }
 
     @PostMapping("reverse.do")
-    public ReverseResponse reverseDo(@RequestBody ReverseRequest orderRequest){
+    public ReverseResponse reverseDo(ReverseRequest orderRequest){
         return orderControllerManager.reverseDo(orderRequest);
     }
 }
