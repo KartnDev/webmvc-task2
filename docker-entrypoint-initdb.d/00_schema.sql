@@ -1,6 +1,6 @@
 CREATE TABLE users (
    id TEXT PRIMARY KEY,
-   userName TEXT NOT NULL,
+   userName TEXT NOT NULL UNIQUE,
    password TEXT NOT NULL,
    isDeleted BOOLEAN DEFAULT FALSE,
    deletedAt DATE DEFAULT NULL
