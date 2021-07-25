@@ -1,6 +1,5 @@
 package org.example.repository;
 
-import org.example.domain.Order;
 import org.example.domain.User;
 import org.example.utils.JdbcUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,7 +7,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -30,8 +28,8 @@ public class PostgresUserRepositoryImpl implements UserRepository {
         //language=PostgreSQL
         final String queryString =
                 "SELECT id, userName, password " +
-                "FROM users " +
-                "WHERE userName = ?";
+                        "FROM users " +
+                        "WHERE userName = ?";
 
         return JdbcUtils.queryForOptional(jdbcTemplate, queryString, rowMapper, userName);
     }

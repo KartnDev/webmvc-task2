@@ -11,8 +11,8 @@ import java.util.List;
 @EnableWebMvc
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
-  @Override
-  public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-    converters.add(new GsonHttpMessageConverter());
-  }
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(new GsonHttpMessageConverter());
+    }
 }
