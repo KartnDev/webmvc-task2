@@ -1,87 +1,165 @@
-GET http://localhost:8080/api/products
+###########################################
+############ register.do ##################
+###########################################
 
-> {%
-client.test("Request executed successfully", function() {
-  client.assert(response.status === 200, "Response status is not 200");
-});
-%}
-
-###
-
-GET http://localhost:8080/api/products?id=1
-
-> {%
-client.test("Request executed successfully", function() {
-  client.assert(response.status === 200, "Response status is not 200");
-});
-%}
-
-###
-
-GET http://localhost:8080/api/products?id=404
-
-> {%
-client.test("Request executed successfully", function() {
-  client.assert(response.status === 404, "Response status is not 404");
-});
-%}
-
-###
-
-POST http://localhost:8080/api/products
+### New Registration
+POST http://localhost:8080/api/v1/register.do
 Content-Type: application/x-www-form-urlencoded
 
-id=0&name=BigMac&price=200
+userName=admin&password=admin&orderNumber=3342&amount=123&currency=21321&returnUrl=https://test.domain.io/api/v1/registerCallback/success&failUrl=https://test.domain.io/api/v1/registerCallback/fail
 
 > {%
-client.test("Request executed successfully", function() {
+client.test("Registered new order successfully", function() {
   client.assert(response.status === 200, "Response status is not 200");
-  client.global.set('createdId', response.body.id);
+  client.assert(response.body.createdOrder !== null, "Order was not created")
+  client.assert(response.body.createdOrder.id !== null, "Id was not generated for order")
+  client.assert(response.body.createdOrder.userId === "111111", "The UserId was not received from the Order request")
+  client.assert(response.body.createdOrder.orderNumber === "3342", "The OrderNumber was not received from the Order request")
+  client.assert(response.body.createdOrder.amount === 123, "The Amount was not received from the Order request")
+  client.assert(response.body.createdOrder.currency === 21321, "The Currency was not received from the Order request")
+  client.assert(response.body.createdOrder.status === "Registered", "Status is not REGISTERED")
+  client.assert(response.body.createdOrder.returnUrl === "https://test.domain.io/api/v1/registerCallback/success", "Bad return url")
+  client.assert(response.body.createdOrder.failUrl === "https://test.domain.io/api/v1/registerCallback/fail", "Bad fail url")
+  client.assert(response.body.createdOrder.isDeleted === false, "Order is deleted")
+
+  client.assert(response.body.status === "Registered", "Status is not REGISTERED")
+  client.assert(response.body.errorCode === 0, "Error code is not equals 0, but must be")
+  client.assert(response.body.hasErrors === false, "Occurred errors while registering new order")
 });
 %}
 
-###
-
-POST http://localhost:8080/api/products
+### Bad Request with invalid credentails
+POST http://localhost:8080/api/v1/register.do
 Content-Type: application/x-www-form-urlencoded
 
-id=1&name=Burger&price=200
+userName=adminThatNotExists&password=123&orderNumber=3342&amount=123&currency=21321&returnUrl=https://test.domain.io/api/v1/registerCallback/success&failUrl=https://test.domain.io/api/v1/registerCallback/fail
 
 > {%
-client.test("Request executed successfully", function() {
-  client.assert(response.status === 200, "Response status is not 200");
+client.test("Registered with not exists user", function() {
+  client.assert(response.status === 404, "Response status for unexisting must be 404");
 });
 %}
 
-###
-
-POST http://localhost:8080/api/products
+### Bad Request with bad credentials for existing user
+POST http://localhost:8080/api/v1/register.do
 Content-Type: application/x-www-form-urlencoded
 
-id=404&name=Burger&price=200
+userName=admin&password=123&orderNumber=3342&amount=123&currency=21321&returnUrl=https://test.domain.io/api/v1/registerCallback/success&failUrl=https://test.domain.io/api/v1/registerCallback/fail
 
 > {%
-client.test("Request executed successfully", function() {
-  client.assert(response.status === 404, "Response status is not 404");
+client.test("Registered with bad credentials", function() {
+  client.assert(response.status === 405, "Response status for bad credentials must be 405");
 });
 %}
 
-###
+###########################################
+############ getOrderStatus.do ############
+###########################################
 
-DELETE http://localhost:8080/api/products?id={{createdId}}
+### Get order status
+POST http://localhost:8080/api/v1/getOrderStatus.do
+Content-Type: application/x-www-form-urlencoded
+
+userName=admin&password=admin&orderId=1234567890
 
 > {%
-client.test("Request executed successfully", function() {
+client.test("Get order status successfully", function() {
   client.assert(response.status === 200, "Response status is not 200");
+  client.assert(response.body.orderStatus === "Registered" || response.body.orderStatus === "Cancel", "Status is not REGISTERED or CANCELED")
+  client.assert(response.body.errorCode === 0, "Error code is not equals 0, but must be")
+  client.assert(response.body.hasErrors === false, "Occurred errors while registering new order")
+  client.assert(response.body.orderId === "1234567890", "Bad orderId")
+  client.assert(response.body.amount === 721, "Bad amount, not a default created value")
+  client.assert(response.body.currency === 5555, "Bad currency, not a default created value")
 });
 %}
 
-###
+### Item cannot be found because it not exists
+POST http://localhost:8080/api/v1/getOrderStatus.do
+Content-Type: application/x-www-form-urlencoded
 
-DELETE http://localhost:8080/api/products?id=9999
+userName=admin&password=admin&orderId=34231312
 
 > {%
-client.test("Request executed successfully", function() {
-  client.assert(response.status === 404, "Response status is not 404");
+client.test("Get status for not existing item", function() {
+  client.assert(response.status === 404, "When item is not found we must have response with status 404");
+});
+%}
+
+### Bad Request with invalid credentails
+POST http://localhost:8080/api/v1/getOrderStatus.do
+Content-Type: application/x-www-form-urlencoded
+
+userName=admin1&password=admin1&orderId=1234567890
+
+> {%
+client.test("Registered with not exists user", function() {
+  client.assert(response.status === 404, "Response status for unexisting must be 404");
+});
+%}
+
+### Bad Request with bad credentials for existing user
+POST http://localhost:8080/api/v1/getOrderStatus.do
+Content-Type: application/x-www-form-urlencoded
+
+userName=admin&password=admin1&orderId=1234567890
+
+> {%
+client.test("Registered with bad credentials", function() {
+  client.assert(response.status === 405, "Response status for bad credentials must be 405");
+});
+%}
+
+###########################################
+############ reverse.do ###################
+###########################################
+
+### Reverse order ok
+POST http://localhost:8080/api/v1/reverse.do
+Content-Type: application/x-www-form-urlencoded
+
+userName=admin&password=admin&orderId=1234567890
+
+> {%
+client.test("Reverse is ok", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+  client.assert(response.body.errorCode === 0, "Error code is not equals 0, but must be")
+  client.assert(response.body.hasErrors === false, "Occurred errors while registering new order")
+});
+%}
+
+### Reverse fail if item is not exists
+POST http://localhost:8080/api/v1/reverse.do
+Content-Type: application/x-www-form-urlencoded
+
+userName=admin&password=admin&orderId=34231312
+
+> {%
+client.test("Get status for not existing item", function() {
+  client.assert(response.status === 404, "When item is not found we must have response with status 404");
+});
+%}
+
+### Reverse fail if invalid credentails
+POST http://localhost:8080/api/v1/reverse.do
+Content-Type: application/x-www-form-urlencoded
+
+userName=admin1&password=admin1&orderId=1234567890
+
+> {%
+client.test("Registered with not exists user", function() {
+  client.assert(response.status === 404, "Response status for unexisting must be 404");
+});
+%}
+
+### Reverse fail with bad credentials for existing user
+POST http://localhost:8080/api/v1/reverse.do
+Content-Type: application/x-www-form-urlencoded
+
+userName=admin&password=admin1&orderId=1234567890
+
+> {%
+client.test("Registered with bad credentials", function() {
+  client.assert(response.status === 405, "Response status for bad credentials must be 405");
 });
 %}
