@@ -7,7 +7,7 @@ import org.example.exception.ItemNotFoundException;
 import org.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-@Service("webmvc_UserService")
+@Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;

@@ -6,7 +6,7 @@ import org.example.exception.ItemNotFoundException;
 import org.example.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
-@Service("webmvc_OrderService")
+@Service
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;

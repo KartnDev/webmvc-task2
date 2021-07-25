@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
-@Repository("webmvc_PostgresUserRepositoryImpl")
+@Repository
 public class PostgresUserRepositoryImpl implements UserRepository {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<User> rowMapper;

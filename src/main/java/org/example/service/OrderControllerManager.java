@@ -16,7 +16,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@Component("webmvc_OrderControllerManager")
+@Component
 @RequiredArgsConstructor
 public class OrderControllerManager {
     private final OrderService orderService;

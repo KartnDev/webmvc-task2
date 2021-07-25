@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository("webmvc_PostgresOrderRepositoryImpl")
+@Repository
 public class PostgresOrderRepositoryImpl implements OrderRepository {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Order> rowMapper;
