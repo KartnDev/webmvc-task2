@@ -1,16 +1,13 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.requests.DepositRequest;
 import org.example.domain.requests.GetOrderStatusRequest;
 import org.example.domain.requests.OrderRegisterRequest;
 import org.example.domain.requests.ReverseRequest;
-import org.example.domain.response.DepositResponse;
 import org.example.domain.response.GetOrderStatusResponse;
 import org.example.domain.response.OrderRegisterResponse;
 import org.example.domain.response.ReverseResponse;
 import org.example.service.OrderControllerManager;
-import org.example.service.OrderService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,11 +19,6 @@ public class OrderController {
     @PostMapping("register.do")
     public OrderRegisterResponse registerDo(OrderRegisterRequest orderRequest){
         return orderControllerManager.registerDo(orderRequest);
-    }
-
-    @PostMapping("deposit.do")
-    public DepositResponse depositDo(DepositRequest depositRequest){
-        return orderControllerManager.depositDo(depositRequest);
     }
 
     @PostMapping("getOrderStatus.do")
